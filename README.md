@@ -53,3 +53,9 @@ Swagger UI: `https://localhost:7056/swagger`
 
 **Review**
 - Id, Comment, Rating (1-5), MovieId
+
+
+## Screenshots
+
+### Swagger UI
+<img width="800" alt="Swagger UI" src="https://github.com/user-attachments/assets/8cbf8c0e-5cf0-4922-b9fd-80531c67410f" />
