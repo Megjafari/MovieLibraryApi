@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Movie> Movies => Set<Movie>();
     public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
