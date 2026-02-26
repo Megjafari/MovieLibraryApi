@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using MovieLibraryApi.Data;
 using MovieLibraryApi.Services;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +31,24 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
+
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -39,6 +60,9 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieLibraryApi v1");
     });
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
