@@ -46,9 +46,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
     });
-
-
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -61,10 +58,11 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("AllowFrontend");
+app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors("AllowFrontend");
-app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
