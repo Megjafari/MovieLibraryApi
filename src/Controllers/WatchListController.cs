@@ -7,7 +7,7 @@ using System.Security.Claims;
 namespace MovieLibraryApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/watchlist")]
 [Authorize]
 public class WatchListController : ControllerBase
 {
