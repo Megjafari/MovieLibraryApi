@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieLibraryApi.Dtos;
 using MovieLibraryApi.Models;
 using MovieLibraryApi.Services;
+using System.Security.Claims;
 
 namespace MovieLibraryApi.Controllers;
 
@@ -16,11 +18,14 @@ public class ReviewsController : ControllerBase
         _service = service;
     }
 
-    // Extra filter: /api/reviews?movieId=1
     [HttpGet]
     public async Task<ActionResult<List<ReviewResponseDto>>> GetAll([FromQuery] int? movieId)
     {
-        var reviews = await _service.GetAllAsync(movieId);
+        int? userId = null;
+        if (User.Identity?.IsAuthenticated == true)
+            userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        var reviews = await _service.GetAllAsync(movieId, userId);
 
         var dto = reviews.Select(r => new ReviewResponseDto
         {
@@ -49,13 +54,17 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<ReviewResponseDto>> Create(ReviewCreateDto dto)
     {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
         var entity = new Review
         {
             Comment = dto.Comment,
             Rating = dto.Rating,
-            MovieId = dto.MovieId
+            MovieId = dto.MovieId,
+            UserId = userId
         };
 
         var created = await _service.CreateAsync(entity);
@@ -73,6 +82,7 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> Update(int id, ReviewUpdateDto dto)
     {
         var updated = new Review
@@ -89,6 +99,7 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var ok = await _service.DeleteAsync(id);
