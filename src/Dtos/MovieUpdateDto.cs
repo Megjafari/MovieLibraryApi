@@ -11,7 +11,5 @@ public class MovieUpdateDto
 
     public string? Description { get; set; }
 
-    [Required]
-    [NotInFuture]
-    public DateTime ReleaseDate { get; set; }
+    public DateTime? ReleaseDate { get; set; }
 }
