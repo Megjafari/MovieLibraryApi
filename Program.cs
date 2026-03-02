@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
-            "https://megflix.vercel.app",
+            "https://megflix.meghdadjafari.dev",
             "http://localhost:5173"
         )
         .AllowAnyHeader()
