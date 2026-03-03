@@ -24,20 +24,32 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
-        if (_context.Users.Any(u => u.Email == dto.Email))
-            return BadRequest("Email already exists");
+    // Email validering
+    if (string.IsNullOrWhiteSpace(dto.Email) || !dto.Email.Contains("@") || !dto.Email.Contains("."))
+        return BadRequest("Invalid email address");
 
-        var user = new User
-        {
-            Username = dto.Username,
-            Email = dto.Email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
-        };
+    // Lösenord validering
+    if (string.IsNullOrWhiteSpace(dto.Password) || dto.Password.Length < 6)
+        return BadRequest("Password must be at least 6 characters");
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+    // Username validering
+    if (string.IsNullOrWhiteSpace(dto.Username) || dto.Username.Length < 2)
+        return BadRequest("Username must be at least 2 characters");
 
-        return Ok("User registered successfully");
+    if (_context.Users.Any(u => u.Email == dto.Email))
+        return BadRequest("Email already exists");
+
+    var user = new User
+    {
+        Username = dto.Username,
+        Email = dto.Email,
+        PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
+    };
+
+    _context.Users.Add(user);
+    await _context.SaveChangesAsync();
+
+    return Ok("User registered successfully");
     }
 
     [HttpPost("login")]
