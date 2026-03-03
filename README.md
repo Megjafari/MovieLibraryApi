@@ -423,6 +423,10 @@ The API returns standard HTTP status codes:
 The API is deployed on **Render** using Docker.
 
 > ⚠️ **Note:** This project uses Render's free tier. The API may take 1–2 minutes to respond after a period of inactivity as the server spins up from sleep mode.
+|
+
+---
+
 
 ### Environment variables on Render
 
@@ -430,10 +434,9 @@ The API is deployed on **Render** using Docker.
 |----------|-------------|
 | `ConnectionStrings__DefaultConnection` | PostgreSQL connection string (Supabase) |
 | `Jwt__Key` | Secret key for JWT signing |
-| `Jwt__Issuer` | JWT issuer |
-| `Jwt__Audience` | JWT audience |
+| `Jwt__Issuer` | JWT issuer (`megflix-api`) |
+| `Jwt__Audience` | JWT audience (`megflix-client`) |
 
----
 
 ## Related
 
